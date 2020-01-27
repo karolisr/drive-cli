@@ -381,9 +381,7 @@ def upload_file(name, path, pid):
     retries = 0
     new_file = None
 
-    # the retry count of 7 translates to a maximum final wait time
-    # of 2 minutes and 8 seconds
-    while retries <= 7:
+    while retries < 9:
         try:  # exponential backoff
 
             if os.stat(path).st_size <= (1024 * 1024):
@@ -407,11 +405,13 @@ def upload_file(name, path, pid):
 
         except GoogleHttpError as ghe:
             print(ghe)
-            time.sleep(2 ** retries)
+            wait_time = 2 ** (retries + 1)
+            print('Will retry in', wait_time, 'seconds.')
+            time.sleep(wait_time)
             retries += 1
 
     if retries > 0:
-        print('Retries performed:', retries)
+        print('Total upload attempts performed:', retries)
         if new_file is None:
             print('Retry count exceeded, giving up.')
             sys.exit(1)
