@@ -405,11 +405,11 @@ def upload_file(name, path, pid):
             time.sleep(2 ** retries)
             retries += 1
 
-        if retries > 0:
-            print('Retries performed:', retries)
-            if new_file is None:
-                print('Retry count exceeded, giving up.')
-                sys.exit(1)
+    if retries > 0:
+        print('Retries performed:', retries)
+        if new_file is None:
+            print('Retry count exceeded, giving up.')
+            sys.exit(1)
 
     data = drive_data()
     data[path] = {'id': new_file['id'], 'time': time.time()}
