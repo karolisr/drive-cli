@@ -15,7 +15,7 @@ from httplib2 import Http
 from oauth2client import file
 
 
-# dirpath = os.path.dirname(os.path.realpath(__file__))
+dirpath_package = os.path.dirname(os.path.realpath(__file__))
 dirpath = os.getcwd()
 mime = MimeTypes()
 
@@ -226,7 +226,7 @@ def create_new(cwd, fid):
 
 
 def delete_file(fid):
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v2', http=creds.authorize(Http()))
@@ -239,7 +239,7 @@ def delete_file(fid):
 
 
 def get_file(fid):
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
@@ -249,7 +249,7 @@ def get_file(fid):
 
 def get_child(cwd):
     data = drive_data()
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
@@ -271,7 +271,7 @@ def get_child(cwd):
 
 
 def get_child_id(pid, item):
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
@@ -292,7 +292,7 @@ def create_dir(cwd, pid, name):
         'mimeType': 'application/vnd.google-apps.folder',
         'parents': [pid]
     }
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
@@ -307,7 +307,7 @@ def create_dir(cwd, pid, name):
 
 
 def file_download(item, cwd, clone=False):
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
@@ -337,7 +337,7 @@ def file_download(item, cwd, clone=False):
 
 
 def concat(fid):
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
@@ -360,7 +360,7 @@ def identify_mimetype(name):
 
 
 def upload_file(name, path, pid):
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
@@ -395,7 +395,7 @@ def upload_file(name, path, pid):
 
 
 def update_file(name, path, fid):
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
@@ -412,7 +412,7 @@ def update_file(name, path, fid):
 
 def pull_content(cwd, fid):
     data = drive_data()
-    token = os.path.join(dirpath, 'token.json')
+    token = os.path.join(dirpath_package, 'token.json')
     store = file.Storage(token)
     creds = store.get()
     service = build('drive', 'v3', http=creds.authorize(Http()))
