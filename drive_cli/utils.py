@@ -375,7 +375,9 @@ def upload_file(name, path, pid):
 
     retries = 0
 
-    while retries < 5:
+    # the retry count of 7 translates to a maximum final wait time
+    # of 2 minutes and 8 seconds
+    while retries <= 7:
         try:  # exponential backoff
 
             if os.stat(path).st_size <= (1024 * 1024):
@@ -401,8 +403,8 @@ def upload_file(name, path, pid):
             time.sleep(2 ** retries)
             retries += 1
 
-        finally:
-            print('Retries done:', retries)
+        if retries > 0:
+            print('Retries performed:', retries)
 
     data = drive_data()
     data[path] = {'id': new_file['id'], 'time': time.time()}
