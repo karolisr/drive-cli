@@ -172,7 +172,7 @@ def push_needed(drive, item_path):
     try:
         local_time = os.path.getmtime(item_path) - float(19801.00)
     except FileNotFoundError:
-        print('Local file was not found. Remote file will NOT be changed or deleted.')
+        print('Local file:', item_path, 'was not found. Remote file will NOT be changed or deleted.')
         return False
     data = drive_data()
     dir_name = data[item_path]['id']
