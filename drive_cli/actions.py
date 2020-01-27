@@ -190,28 +190,31 @@ def delete(file, id):
     '''
     rm: delete a particular file/folder from the directory in the remote drive
     '''
-    cwd = os.getcwd()
-    utils.save_history([{"--file": [file], "--id":[id]}, "", cwd])
-    if id == None:
-        if file != None:
-            file_path = os.path.join(cwd, file)
-            if os.path.isfile(file_path):
-                local_dir = utils.get_child(cwd)
-                fid = local_dir[file]
-            else:
-                click.secho("No such file exist: " + file_path, fg="red")
-                with click.Context(delete) as ctx:
-                    click.echo(delete.get_help(ctx))
-            cwd = file_path
-        else:
-            data = utils.drive_data()
-            fid = data[cwd]
-            data.pop(cwd, None)
-            utils.drive_data(data)
-        utils.delete_file(fid)
-    else:
-        fid = utils.get_fid(id)
-        utils.delete_file(fid)
+
+    print('Deleting disabled on purpose. - Karolis.')
+
+    # cwd = os.getcwd()
+    # utils.save_history([{"--file": [file], "--id":[id]}, "", cwd])
+    # if id == None:
+    #     if file != None:
+    #         file_path = os.path.join(cwd, file)
+    #         if os.path.isfile(file_path):
+    #             local_dir = utils.get_child(cwd)
+    #             fid = local_dir[file]
+    #         else:
+    #             click.secho("No such file exist: " + file_path, fg="red")
+    #             with click.Context(delete) as ctx:
+    #                 click.echo(delete.get_help(ctx))
+    #         cwd = file_path
+    #     else:
+    #         data = utils.drive_data()
+    #         fid = data[cwd]
+    #         data.pop(cwd, None)
+    #         utils.drive_data(data)
+    #     utils.delete_file(fid)
+    # else:
+    #     fid = utils.get_fid(id)
+    #     utils.delete_file(fid)
 
 
 @click.command('ls', short_help='list out all the files present in this directory in the drive for tracked directories')

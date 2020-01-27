@@ -226,16 +226,17 @@ def create_new(cwd, fid):
 
 
 def delete_file(fid):
-    token = os.path.join(dirpath_package, 'token.json')
-    store = file.Storage(token)
-    creds = store.get()
-    service = build('drive', 'v2', http=creds.authorize(Http()))
-    fid = fid['id']
-    try:
-        service.files().delete(fileId=fid).execute()
-    except:
-        click.secho(
-            "Error Ocurred:\n make sure that you have appropriate access", fg='red')
+    print('NOT deleting anything!')
+    # token = os.path.join(dirpath_package, 'token.json')
+    # store = file.Storage(token)
+    # creds = store.get()
+    # service = build('drive', 'v2', http=creds.authorize(Http()))
+    # fid = fid['id']
+    # try:
+    #     service.files().delete(fileId=fid).execute()
+    # except:
+    #     click.secho(
+    #         "Error Ocurred:\n make sure that you have appropriate access", fg='red')
 
 
 def get_file(fid):
