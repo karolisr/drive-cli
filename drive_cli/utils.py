@@ -15,12 +15,13 @@ from httplib2 import Http
 from oauth2client import file
 
 
-dirpath = os.path.dirname(os.path.realpath(__file__))
+# dirpath = os.path.dirname(os.path.realpath(__file__))
+dirpath = os.getcwd()
 mime = MimeTypes()
 
 
 def get_history():
-    hist_path = os.path.join(dirpath, '.history')
+    hist_path = os.path.join(dirpath, '.drive_cli_history')
     if not os.path.isfile(hist_path):
         with open(hist_path, 'w')as outfile:
             history = {}
@@ -41,7 +42,7 @@ def save_history(info):
            "arg": info[1],
            "flags": info[0]
            }
-    hist_path = os.path.join(dirpath, '.history')
+    hist_path = os.path.join(dirpath, '.drive_cli_history')
     history = get_history()
     if not (date in history):
         history[date] = {}
@@ -51,7 +52,7 @@ def save_history(info):
 
 
 def clear_history():
-    hist_path = os.path.join(dirpath, '.history')
+    hist_path = os.path.join(dirpath, '.drive_cli_history')
     os.remove(hist_path)
 
 
@@ -60,7 +61,7 @@ def go_back(picker):
 
 
 def drive_data(*argv):
-    dclipath = os.path.join(dirpath, '.drivecli')
+    dclipath = os.path.join(dirpath, '.drive_cli_data')
     if not os.path.isfile(dclipath):
         with open(dclipath, 'w')as outfile:
             if(not len(argv)):
@@ -452,13 +453,17 @@ def pull_content(cwd, fid):
 
 def list_local(cwd):
     local_lis = os.listdir(cwd)
-    drive_ignore_path = os.path.join(cwd, '.driveignore')
+    drive_ignore_path = os.path.join(cwd, '.drive_cli_ignore')
     if os.path.isfile(drive_ignore_path):
         file = open(drive_ignore_path, 'r')
         untracked_files = file.readlines()
         for f in untracked_files:
             local_lis.remove(f[:-1])
         file.close()
+    if '.drive_cli_history' in local_lis:
+        local_lis.remove('.drive_cli_history')
+    if '.drive_cli_data' in local_lis:
+        local_lis.remove('.drive_cli_data')
     return local_lis
 
 
