@@ -374,6 +374,7 @@ def upload_file(name, path, pid):
     }
 
     retries = 0
+    new_file = None
 
     # the retry count of 7 translates to a maximum final wait time
     # of 2 minutes and 8 seconds
@@ -399,12 +400,16 @@ def upload_file(name, path, pid):
 
             break
 
-        except GoogleHttpError:
+        except GoogleHttpError as ghe:
+            print(ghe)
             time.sleep(2 ** retries)
             retries += 1
 
         if retries > 0:
             print('Retries performed:', retries)
+            if new_file is None:
+                print('Retry count exceeded, giving up.')
+                sys.exit(1)
 
     data = drive_data()
     data[path] = {'id': new_file['id'], 'time': time.time()}
