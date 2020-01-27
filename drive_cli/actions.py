@@ -632,7 +632,7 @@ def file_info(fid):
 @click.option('-l', is_flag=bool, help="list out all the untracked files")
 def drive_ignore(unttrack_file, l):
     cwd = os.getcwd()
-    drive_ignore_path = os.path.join(cwd, '.driveignore')
+    drive_ignore_path = os.path.join(cwd, '.drive_cli_ignore')
     if(len(unttrack_file) != 0):
         try:
             file = open(drive_ignore_path, 'r')
@@ -660,7 +660,7 @@ def drive_ignore(unttrack_file, l):
             click.secho(untracked_files)
             file.close()
         else:
-            click.secho(".driveignore file doesn't exist in " + cwd, fg="red")
+            click.secho(".drive_cli_ignore file doesn't exist in " + cwd, fg="red")
             sys.exit(0)
     else:
         utils.save_history([{"-l": [None]}, " ", cwd])
