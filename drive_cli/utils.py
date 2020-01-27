@@ -169,8 +169,13 @@ def write_needed(dir_name, item):
 def push_needed(drive, item_path):
     drive_time = time.mktime(time.strptime(
         drive['modifiedTime'], '%Y-%m-%dT%H:%M:%S.%fZ')) + float(19800.00)
-    local_time = os.path.getmtime(item_path) - float(19801.00)
+    try:
+        local_time = os.path.getmtime(item_path) - float(19801.00)
+    except FileNotFoundError:
+        print('Local file was not found. Remote file will NOT be changed or deleted.')
+        return False
     data = drive_data()
+    dir_name = data[item_path]['id']
     sync_time = data[item_path]['time']
     if sync_time < local_time:
         if sync_time < drive_time:
