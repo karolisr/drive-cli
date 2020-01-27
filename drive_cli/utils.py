@@ -377,7 +377,7 @@ def upload_file(name, path, pid):
                                           media_body=media,
                                           fields='id').execute()
     else:
-        CHUNK_SIZE_MB = int(os.getenv("CHUNK_SIZE_MB") or 1)  # MB. You may want to increase the size to a higher speed if the network restrictions allow
+        CHUNK_SIZE_MB = int(os.getenv("CHUNK_SIZE_MB") or 500)
         media = MediaFileUpload(
             path, mimetype=file_mimeType,
             chunksize=(1024 * 1024 * CHUNK_SIZE_MB), resumable=True)
