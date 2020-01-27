@@ -11,6 +11,7 @@ from pick import Picker
 from datetime import datetime
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
+from googleapiclient.errors import HttpError as GoogleHttpError
 from httplib2 import Http
 from oauth2client import file
 
@@ -371,22 +372,37 @@ def upload_file(name, path, pid):
         'parents': [pid],
         'mimeType': file_mimeType
     }
-    if os.stat(path).st_size <= (1024 * 1024):
-        media = MediaFileUpload(path, mimetype=file_mimeType)
-        new_file = service.files().create(body=file_metadata,
-                                          media_body=media,
-                                          fields='id').execute()
-    else:
-        CHUNK_SIZE_MB = int(os.getenv("CHUNK_SIZE_MB") or 500)
-        media = MediaFileUpload(
-            path, mimetype=file_mimeType,
-            chunksize=(1024 * 1024 * CHUNK_SIZE_MB), resumable=True)
-        status, new_file = None, None
-        req = service.files().create(body=file_metadata,
-                                     media_body=media,
-                                     fields='id')
-        while new_file is None:
-            status, new_file = req.next_chunk()
+
+    retries = 0
+
+    while retries < 5:
+        try:  # exponential backoff
+
+            if os.stat(path).st_size <= (1024 * 1024):
+                media = MediaFileUpload(path, mimetype=file_mimeType)
+                new_file = service.files().create(body=file_metadata,
+                                                  media_body=media,
+                                                  fields='id').execute()
+            else:
+                CHUNK_SIZE_MB = int(os.getenv("CHUNK_SIZE_MB") or 500)
+                media = MediaFileUpload(
+                    path, mimetype=file_mimeType,
+                    chunksize=(1024 * 1024 * CHUNK_SIZE_MB), resumable=True)
+                status, new_file = None, None
+                req = service.files().create(body=file_metadata,
+                                             media_body=media,
+                                             fields='id')
+                while new_file is None:
+                    status, new_file = req.next_chunk()
+
+            break
+
+        except GoogleHttpError:
+            time.sleep(2 ** retries)
+            retries += 1
+
+        finally:
+            print('Retries done:', retries)
 
     data = drive_data()
     data[path] = {'id': new_file['id'], 'time': time.time()}
